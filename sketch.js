@@ -125,7 +125,6 @@ var settings = {
     alpha: true
   }
 };
-gui.add(settings, "fps, 5m 120_;
 
 var gui = new dat.GUI();
 
