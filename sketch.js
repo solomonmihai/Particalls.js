@@ -1,33 +1,10 @@
 let canvas = document.createElement("canvas");
 document.body.appendChild(canvas);
 let ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth - 19;
-canvas.height = window.innerHeight - 19;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 const width = canvas.width;
 const height = canvas.height;
-const FPS = 60;
-
-// var loadJSON = function(path_config_json, callback){
-
-//   /* load json config */
-//   var xhr = new XMLHttpRequest();
-//   xhr.open('GET', path_config_json);
-//   xhr.onreadystatechange = function (data) {
-//     if (xhr.readyState == 4){
-//       if (xhr.status == 200){
-//         settings = JSON.parse(data.currentTarget.response);
-//         if (callback) {
-//           callback();
-//         }
-//       }
-//     }
-//   };
-//   xhr.send();
-// };
-
-// loadJSON('particleSettings.json', function() {
-//   console.log("File loaded succesfully");
-// });
 
 function Vector(x, y) {
   this.x = x;
@@ -85,10 +62,21 @@ var particles = [];
 
 var settings = {
   fps: 60,
-  number_per_frame: 0,
-  size: 0,
-  speed: 0,
-  lifespan: 0,
+  background_color: {
+    r: 50,
+    g: 0,
+    b: 50,
+    get rgb() {
+      return `rgb(${this.r}, ${this.g}, ${this.b})`;
+    },
+    get rgba() {
+      return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
+    }
+  },
+  number_per_frame: 10,
+  size: 10,
+  speed: 15,
+  lifespan: 20,
   spawn_box: {
     x: width / 2,
     y: height - 200,
@@ -101,18 +89,18 @@ var settings = {
   },
   acc: {
     x: {
-      min: 0,
-      max: 0
+      min: -1,
+      max: 1
     },
     y: {
-      min: 0,
-      max: 0
+      min: -7,
+      max: -2
     }
   },
   color: {
-    r: 0,
-    g: 0,
-    b: 0,
+    r: 255,
+    g: 255,
+    b: 255,
     a: 0,
     get rgb() {
       return `rgb(${this.r}, ${this.g}, ${this.b})`;
@@ -133,6 +121,11 @@ gui.add(settings, "number_per_frame", 0, 100);
 gui.add(settings, "size", 0, 30);
 gui.add(settings, "speed", 0, 100);
 gui.add(settings, "lifespan", 0, 100);
+
+var background_color = gui.addFolder("BG_Color");
+background_color.add(settings.background_color, "r", 0, 255);
+background_color.add(settings.background_color, "g", 0, 255);
+background_color.add(settings.background_color, "b", 0, 255);
 
 var spawn_box_folder = gui.addFolder("SpawnBox");
 spawn_box_folder.add(settings.spawn_box, "x", 0, width);
@@ -213,26 +206,26 @@ function Particle(options) {
 }
 
 var process = function() {
-  //setTimeout(function() {
-  requestAnimationFrame(process);
+  setTimeout(function() {
+    requestAnimationFrame(process);
 
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = settings.background_color.rgb;
+    ctx.fillRect(0, 0, width, height);
 
-  for (let i = 0; i < settings.number_per_frame; i++) {
-    let p = new Particle(settings);
-    particles.push(p);
-  }
-
-  for (let i = particles.length - 1; i > 0; i--) {
-    particles[i].update();
-    particles[i].render();
-
-    if (particles[i].dead()) {
-      particles.splice(i, 1);
+    for (let i = 0; i < settings.number_per_frame; i++) {
+      let p = new Particle(settings);
+      particles.push(p);
     }
-  }
-  //}, 1000 / FPS);
+
+    for (let i = particles.length - 1; i > 0; i--) {
+      particles[i].update();
+      particles[i].render();
+
+      if (particles[i].dead()) {
+        particles.splice(i, 1);
+      }
+    }
+  }, 1000 / settings.fps);
 };
 
 window.addEventListener(
