@@ -242,6 +242,9 @@ var process = function() {
 
     if (typeof createParticles === "function") {
       createParticles();
+    } else {
+      System.spawnParticles();
+      System.performUpdate();
     }
 
     const now = performance.now();
