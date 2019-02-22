@@ -17,7 +17,7 @@ Link: ```https://raw.githack.com/Rabadonnn/Particalls.js/master/sketch.js```
 ```html
 <html>
   <body>
-    <script src="https://raw.githack.com/Rabadonnn/Particalls.js/master/sketch.js"></script>
+    <script src="https://raw.githack.com/Rabadonnn/Particalls.js/master/src/particalls.js"></script>
   </body>
 </html>
 ```
