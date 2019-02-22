@@ -12,12 +12,12 @@ Date: 22 February 2019
 ### index.html
 First of all ```index.html``` must have a body tag, then the script should be placed at the end of the file.
 
-Link: ```https://raw.githack.com/Rabadonnn/Particalls.js/master/sketch.js```
+Link: ```https://rawcdn.githack.com/Rabadonnn/Particalls.js/8537673cd6d29a18d19ce52cb91c125139e9443d/src/particalls.js```
 
 ```html
 <html>
   <body>
-    <script src="https://raw.githack.com/Rabadonnn/Particalls.js/master/src/particalls.js"></script>
+    <script src="https://rawcdn.githack.com/Rabadonnn/Particalls.js/8537673cd6d29a18d19ce52cb91c125139e9443d/src/particalls.js"></script>
   </body>
 </html>
 ```
