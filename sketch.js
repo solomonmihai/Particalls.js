@@ -5,6 +5,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const width = canvas.width;
 const height = canvas.height;
+const FPS = 60;
 
 function Vector(x, y) {
   this.x = x;
@@ -61,7 +62,6 @@ function distance(x1, y1, x2, y2) {
 var particles = [];
 
 var settings = {
-  fps: 60,
   background_color: {
     r: 50,
     g: 0,
@@ -114,11 +114,11 @@ var settings = {
   }
 };
 
+
 var gui = new dat.GUI();
 
-gui.add(settings, "fps", 5, 120);
 gui.add(settings, "number_per_frame", 0, 100);
-gui.add(settings, "size", 0, 30);
+gui.add(settings, "size", 0, 100);
 gui.add(settings, "speed", 0, 100);
 gui.add(settings, "lifespan", 0, 100);
 
@@ -205,6 +205,34 @@ function Particle(options) {
   };
 }
 
+function ParticleSystem(options) {
+  this.options = options;
+  this.particles = [];
+
+  this.spawnParticles = function() {
+    for (let i = 0; i < this.options.number_per_frame; i++) {
+      let p = new Particle(this.options);
+      this.particles.push(p);
+    }
+  }
+
+  this.performUpdate = function() {
+    for (let i = 0; i < this.particles.length; i++) {
+      this.particles[i].update();
+      this.particles[i].render();
+
+      if (this.particles[i].dead()) {
+        this.particles.splice(1, i);
+      }
+    }
+  }
+}
+
+var times = [];
+var fps;
+
+var System = new ParticleSystem(settings);
+
 var process = function() {
   setTimeout(function() {
     requestAnimationFrame(process);
@@ -212,20 +240,18 @@ var process = function() {
     ctx.fillStyle = settings.background_color.rgb;
     ctx.fillRect(0, 0, width, height);
 
-    for (let i = 0; i < settings.number_per_frame; i++) {
-      let p = new Particle(settings);
-      particles.push(p);
+    if (typeof createParticles === "function") {
+      createParticles();
     }
 
-    for (let i = particles.length - 1; i > 0; i--) {
-      particles[i].update();
-      particles[i].render();
-
-      if (particles[i].dead()) {
-        particles.splice(i, 1);
-      }
+    const now = performance.now();
+    while (times.length > 0 && times[0] <= now - 1000) {
+      times.shift();
     }
-  }, 1000 / settings.fps);
+    times.push(now);
+    fps = times.length;
+    //console.log(fps);
+  }, 1000 / FPS);
 };
 
 window.addEventListener(
