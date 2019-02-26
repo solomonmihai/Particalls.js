@@ -59,9 +59,8 @@ function distance(x1, y1, x2, y2) {
   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
 
-var particles = [];
-
 var settings = {
+  particles: [],
   background_color: {
     r: 50,
     g: 0,
@@ -181,7 +180,7 @@ function Particle(options) {
 
 function ParticleSystem(options) {
   this.options = options;
-  this.particles = [];
+  this.particles = this.options.particles;
 
   this.spawnParticles = function() {
     for (let i = 0; i < this.options.number_per_frame; i++) {
