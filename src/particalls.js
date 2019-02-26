@@ -150,7 +150,6 @@ function Particle(options) {
     } else if (this.options.shape == "square") {
       ctx.fillRect(this.pos.x, this.pos.y, this.size, this.size);
     }
-    ctx.fillRect(this.pos.x, this.pos.y, this.size, this.size);
     ctx.fill();
     ctx.closePath();
   };
