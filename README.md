@@ -37,7 +37,7 @@ var particleSystem = new ParticleSystem(settings);
 You need to have a ```createParticles()``` function:
 ```javascript
 var particleSystem = new ParticleSystem(settings);
-function ParticleSystem() {
+function createParticles() {
   particleSystem.spawnParticles();
   particleSystem.performUpdate();
 }
