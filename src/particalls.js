@@ -150,6 +150,7 @@ function Particle(options) {
     } else if (this.options.shape == "square") {
       ctx.fillRect(this.pos.x, this.pos.y, this.size, this.size);
     }
+    ctx.fillRect(this.pos.x, this.pos.y, this.size, this.size);
     ctx.fill();
     ctx.closePath();
   };
@@ -161,7 +162,7 @@ function Particle(options) {
       this.color.a = mapValue(this.lifespan, 0, this.options.lifespan, 0, 1);
     }
     if (this.modifiers.size) {
-      this.size = mapValue(this.lifespan, 0, this.options.lifespan, 0, this.options.size);
+      this.size = mapValue(this.lifespan, 0, this.options.lifespan, 1, this.options.size);
     }
 
     this.vel.add(this.acc);
