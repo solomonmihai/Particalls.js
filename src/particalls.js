@@ -109,8 +109,10 @@ var settings = {
       return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
     }
   },
+  shape: "circle",
   modifiers: {
-    alpha: true
+    alpha: true,
+    size: true
   }
 };
 
@@ -143,9 +145,12 @@ function Particle(options) {
   this.render = function() {
     ctx.fillStyle = this.color.rgba;
     ctx.beginPath();
-    ctx.arc(this.pos.x, this.pos.y, this.size, 0, 2 * Math.PI);
 
-    //ctx.fillRect(this.pos.x, this.pos.y, this.size, this.size);
+    if (this.options.shape == "circle") {
+      ctx.arc(this.pos.x, this.pos.y, this.size, 0, 2 * Math.PI);
+    } else if (this.options.shape == "square") {
+      ctx.fillRect(this.pos.x, this.pos.y, this.size, this.size);
+    }
     ctx.fill();
     ctx.closePath();
   };
@@ -154,7 +159,10 @@ function Particle(options) {
     this.lifespan -= 1;
 
     if (this.modifiers.alpha) {
-      this.color.a = mapValue(this.lifespan, 0, this.options.lifespan, 0, 0.5);
+      this.color.a = mapValue(this.lifespan, 0, this.options.lifespan, 0, 1);
+    }
+    if (this.modifiers.size) {
+      this.size = mapValue(this.lifespan, 0, this.options.lifespan, 0, this.options.size);
     }
 
     this.vel.add(this.acc);
