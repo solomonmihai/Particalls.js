@@ -33,9 +33,11 @@ color_folder.add(settings.color, "b", 0, 255);
 
 var modifiers_folder = gui.addFolder("Modifiers")
 modifiers_folder.add(settings.modifiers, "alpha", true);
-modifiers_folder.add(settings.modifiers, "size", true);
 
 gui.add(settings, "shape", ["circle", "square"]);
+
+settings.modifiers.size = false;
+
 var system = new ParticleSystem(settings);
 
 function createParticles() {
