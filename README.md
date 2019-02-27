@@ -39,7 +39,8 @@ You need to have a ```createParticles()``` function:
 var particleSystem = new ParticleSystem(settings);
 function createParticles() {
   particleSystem.spawnParticles();
-  particleSystem.performUpdate();
+  particleSystem.update();
+  particleSystem.render();
 }
 ```
 You can write your own settings object and pass it as an argument for the function
