@@ -1,9 +1,9 @@
 var gui = new dat.GUI();
 
 gui.add(settings, "number_per_frame", 0, 100);
-gui.add(settings, "size", 0, 100).listen();
+gui.add(settings, "size", 0, 400).listen();
 gui.add(settings, "speed", 0, 100);
-gui.add(settings, "lifespan", 0, 100);
+gui.add(settings, "lifespan", 0, 300);
 
 var background_color = gui.addFolder("BG_Color");
 background_color.add(settings.background_color, "r", 0, 255);

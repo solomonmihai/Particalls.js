@@ -5,7 +5,6 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const width = canvas.width;
 const height = canvas.height;
-const FPS = 60;
 
 function Vector(x, y) {
   this.x = x;
