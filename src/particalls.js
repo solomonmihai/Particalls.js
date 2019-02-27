@@ -171,7 +171,7 @@ function Particle(options) {
     this.vel.limit(this.speed);
     this.pos.add(this.vel);
   };
-
+  // omfg
   this.dead = function() {
     if (this.lifespan <= 0) {
       return true;
