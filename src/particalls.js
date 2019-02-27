@@ -11,37 +11,36 @@ function Vector(x, y) {
   this.x = x;
   this.y = y;
   this.magnitude = Math.sqrt(this.x * this.x + this.y * this.y);
-
-  this.add = function(u) {
-    this.x += u.x;
-    this.y += u.y;
-  };
-  this.mult = function(u) {
-    this.x *= u;
-    this.y *= u;
-  };
-  this.div = function(u) {
-    this.x /= u;
-    this.y /= u;
-  };
-  this.mag = function() {
-    return Math.sqrt(this.x * this.x + this.y * this.y);
-  };
-  this.magSquare = function() {
-    return this.x * this.x + this.y * this.y;
-  };
-  this.normalize = function() {
-    let m = this.mag();
-    if (m != 0 && m != 1) {
-      this.div(m);
-    }
-  };
-  this.limit = function(max) {
-    if (this.magSquare() > max * max) {
-      this.normalize();
-      this.mult(max);
-    }
-  };
+}
+Vector.prototype.add = function(u) {
+  this.x += u.x;
+  this.y += u.y;
+}
+Vector.prototype.mult = function(u) {
+  this.x *= u;
+  this.y *= u;
+}
+Vector.prototype.div = function(u) {
+  this.x /= u;
+  this.y /= u;
+}
+Vector.prototype.mag = function() {
+  return Math.sqrt(this.x * this.x + this.y * this.y);
+}
+Vector.prototype.magSquare = function() {
+  return this.x * this.x + this.y * this.y;
+}
+Vector.prototype.normalize = function() {
+  let m = this.mag();
+  if (m != 0 && m != 1) {
+    this.div(m);
+  }
+}
+Vector.prototype.limit = function(max) {
+  if (this.magSquare() > max * max) {
+    this.normalize();
+    this.mult(max);
+  }
 }
 
 function random(min, max) {
@@ -49,9 +48,7 @@ function random(min, max) {
 }
 
 function mapValue(value, start1, stop1, start2, stop2) {
-  let outgoing =
-    start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
-
+  let outgoing = start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
   return outgoing;
 }
 
@@ -100,7 +97,7 @@ var settings = {
     r: 255,
     g: 255,
     b: 255,
-    a: 0,
+    a: 1,
     get rgb() {
       return `rgb(${this.r}, ${this.g}, ${this.b})`;
     },
@@ -109,6 +106,7 @@ var settings = {
     }
   },
   shape: "circle",
+  image_url: "",
   modifiers: {
     alpha: true,
     size: true
@@ -141,6 +139,9 @@ function Particle(options) {
 
   this.modifiers = this.options.modifiers;
 
+  this.image = new Image();
+  this.image.src = this.options.image_url; 
+
   this.render = function() {
     ctx.fillStyle = this.color.rgba;
     ctx.beginPath();
@@ -149,12 +150,13 @@ function Particle(options) {
       ctx.arc(this.pos.x, this.pos.y, this.size, 0, 2 * Math.PI);
     } else if (this.options.shape == "square") {
       ctx.fillRect(this.pos.x, this.pos.y, this.size, this.size);
+    } else if (this.options.shape == "image") {
+      ctx.drawImage(this.image, this.pos.x, this.pos.y, this.size, this.size);
+      ctx.globalAlpha = this.color.a;
     }
     ctx.fill();
     ctx.closePath();
-  };
 
-  this.update = function() {
     this.lifespan -= 1;
 
     if (this.modifiers.alpha) {
@@ -163,7 +165,9 @@ function Particle(options) {
     if (this.modifiers.size) {
       this.size = mapValue(this.lifespan, 0, this.options.lifespan, 1, this.options.size);
     }
+  };
 
+  this.update = function() {
     this.vel.add(this.acc);
     this.vel.limit(this.speed);
     this.pos.add(this.vel);
@@ -171,6 +175,8 @@ function Particle(options) {
 
   this.dead = function() {
     if (this.lifespan <= 0) {
+      return true;
+    } else if (this.pos.x > width || this.pos.x < 0 || this.pos.y > height || this.pos.y < 0) {
       return true;
     } else {
       return false;
@@ -189,35 +195,33 @@ function ParticleSystem(options) {
     }
   }
 
-  this.performUpdate = function() {
+  this.update = function() {
     for (let i = 0; i < this.particles.length; i++) {
       this.particles[i].update();
-      this.particles[i].render();
-
       if (this.particles[i].dead()) {
         this.particles.splice(1, i);
       }
     }
   }
+
+  this.render = function() {
+    for (let i = 0; i < this.particles.length; i++) {
+      this.particles[i].render();
+    }
+  }
 }
 
-var times = [];
-var fps;
-
 var process = function() {
-  setTimeout(function() {
-    requestAnimationFrame(process);
+  requestAnimationFrame(process);
 
-    ctx.fillStyle = settings.background_color.rgb;
-    ctx.fillRect(0, 0, width, height);
+  ctx.fillStyle = settings.background_color.rgb;
+  ctx.fillRect(0, 0, width, height);
 
-    if (typeof createParticles === "function") {
-      createParticles();
-    } else {
-      console.log("No createParticles Function");
-    }
-
-  }, 1000 / FPS);
+  if (typeof createParticles === "function") {
+    createParticles();
+  } else {
+    console.log("No createParticles Function");
+  }
 };
 
 window.addEventListener(

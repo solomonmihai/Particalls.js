@@ -34,7 +34,8 @@ color_folder.add(settings.color, "b", 0, 255);
 var modifiers_folder = gui.addFolder("Modifiers")
 modifiers_folder.add(settings.modifiers, "alpha", true);
 
-gui.add(settings, "shape", ["circle", "square"]);
+gui.add(settings, "shape", ["circle", "square", "image"]);
+gui.add(settings, "image_url");
 
 settings.modifiers.size = false;
 
@@ -42,5 +43,6 @@ var system = new ParticleSystem(settings);
 
 function createParticles() {
   system.spawnParticles();
-  system.performUpdate();
+  system.update();
+  system.render();
 }
