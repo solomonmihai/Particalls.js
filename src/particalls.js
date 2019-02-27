@@ -176,6 +176,8 @@ function Particle(options) {
       return true;
     } else if (this.pos.x > width || this.pos.x < 0 || this.pos.y > height || this.pos.y < 0) {
       return true;
+    } else if (this.color.a <= 0.1) {
+      return  true;
     } else {
       return false;
     }
