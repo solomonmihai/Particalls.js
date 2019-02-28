@@ -131,8 +131,10 @@ var default_settings = {
 
 function Particle(options) {
   this.options = options;
-
-  this.renderer = this.options.renderer;
+  
+  if (this.options.renderer != null) {
+    this.renderer = this.options.renderer;
+  }
 
   this.pos = new Vector(
     random(
