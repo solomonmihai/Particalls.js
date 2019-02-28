@@ -1,10 +1,25 @@
-let canvas = document.createElement("canvas");
-document.body.appendChild(canvas);
-let ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-const width = canvas.width;
-const height = canvas.height;
+function Renderer(options) {
+  this.canvas = null;
+  this.context = null;
+  this.options = options;
+  this.color = options.background_color.rgb;
+
+  this.initCanvas = function() {
+    this.canvas = document.createElement("canvas");
+    document.body.appendChild(this.canvas);
+    this.context = this.canvas.getContext("2d");
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+
+  this.process = function(render_callback) {
+    requestAnimationFrame(() => this.process())
+    this.context.fillStyle = this.color;
+    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.options.renderCallback();
+  }
+}
 
 function Vector(x, y) {
   this.x = x;
@@ -55,7 +70,9 @@ function distance(x1, y1, x2, y2) {
   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
 
-var settings = {
+var default_settings = {
+  renderer: null,
+  renderCallback: null,
   particles: [],
   background_color: {
     r: 50,
@@ -73,8 +90,8 @@ var settings = {
   speed: 15,
   lifespan: 20,
   spawn_box: {
-    x: width / 2,
-    y: height - 200,
+    x: window.innerWidth / 2,
+    y: window.innerHeight - 200,
     w: 1,
     h: 1
   },
@@ -115,6 +132,8 @@ var settings = {
 function Particle(options) {
   this.options = options;
 
+  this.renderer = this.options.renderer;
+
   this.pos = new Vector(
     random(
       this.options.spawn_box.x,
@@ -142,19 +161,19 @@ function Particle(options) {
   this.image.src = this.options.image_url; 
 
   this.render = function() {
-    ctx.fillStyle = this.color.rgba;
-    ctx.beginPath();
+    this.renderer.context.fillStyle = this.color.rgba;
+    this.renderer.context.beginPath();
 
     if (this.options.shape == "circle") {
-      ctx.arc(this.pos.x, this.pos.y, this.size, 0, 2 * Math.PI);
+      this.renderer.context.arc(this.pos.x, this.pos.y, this.size, 0, 2 * Math.PI);
     } else if (this.options.shape == "square") {
-      ctx.fillRect(this.pos.x, this.pos.y, this.size, this.size);
+      this.renderer.context.fillRect(this.pos.x, this.pos.y, this.size, this.size);
     } else if (this.options.shape == "image") {
-      ctx.drawImage(this.image, this.pos.x, this.pos.y, this.size, this.size);
-      ctx.globalAlpha = this.color.a;
+      this.renderer.context.drawImage(this.image, this.pos.x, this.pos.y, this.size, this.size);
+      this.renderer.context.globalAlpha = this.color.a;
     }
-    ctx.fill();
-    ctx.closePath();
+    this.renderer.context.fill();
+    this.renderer.context.closePath();
 
     this.lifespan -= 1;
 
@@ -174,7 +193,7 @@ function Particle(options) {
   this.dead = function() {
     if (this.lifespan <= 0) {
       return true;
-    } else if (this.pos.x > width || this.pos.x < 0 || this.pos.y > height || this.pos.y < 0) {
+    } else if (this.pos.x > this.renderer.canvas.width || this.pos.x < 0 || this.pos.y > this.renderer.canvas.height || this.pos.y < 0) {
       return true;
     } else if (this.color.a <= 0.1) {
       return  true;
@@ -210,24 +229,3 @@ function ParticleSystem(options) {
     }
   }
 }
-
-var process = function() {
-  requestAnimationFrame(process);
-
-  ctx.fillStyle = settings.background_color.rgb;
-  ctx.fillRect(0, 0, width, height);
-
-  if (typeof createParticles === "function") {
-    createParticles();
-  } else {
-    console.log("No createParticles Function");
-  }
-};
-
-window.addEventListener(
-  "load",
-  function() {
-    process();
-  },
-  false
-);
