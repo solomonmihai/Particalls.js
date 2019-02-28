@@ -131,7 +131,7 @@ var default_settings = {
 
 function Particle(options) {
   this.options = options;
-  
+
   if (this.options.renderer != null) {
     this.renderer = this.options.renderer;
   }
@@ -194,8 +194,6 @@ function Particle(options) {
   };
   this.dead = function() {
     if (this.lifespan <= 0) {
-      return true;
-    } else if (this.pos.x > this.renderer.canvas.width || this.pos.x < 0 || this.pos.y > this.renderer.canvas.height || this.pos.y < 0) {
       return true;
     } else if (this.color.a <= 0.1) {
       return  true;
