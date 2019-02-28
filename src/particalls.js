@@ -14,6 +14,7 @@ function Renderer(options) {
 
   this.process = function(render_callback) {
     requestAnimationFrame(() => this.process())
+    this.color = options.background_color.rgb;
     this.context.fillStyle = this.color;
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
