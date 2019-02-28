@@ -209,18 +209,15 @@ function ParticleSystem(options) {
 
   this.spawnParticles = function() {
     for (let i = 0; i < this.options.number_per_frame; i++) {
-      let p = new Particle(this.options);
-      this.particles.push(p);
+      this.particles.push(new Particle(this.options));
     }
   }
 
   this.update = function() {
     for (let i = 0; i < this.particles.length; i++) {
       this.particles[i].update();
-      if (this.particles[i].dead()) {
-        this.particles.splice(1, i);
-      }
     }
+    this.particles = this.particles.filter(p => !p.dead());
   }
 
   this.render = function() {
