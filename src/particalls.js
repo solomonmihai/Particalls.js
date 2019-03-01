@@ -162,6 +162,7 @@ function Particle(options) {
   this.image = new Image();
   this.image.src = this.options.image_url; 
 
+
   this.render = function() {
     this.renderer.context.fillStyle = this.color.rgba;
     this.renderer.context.beginPath();
@@ -216,8 +217,11 @@ function ParticleSystem(options) {
   this.update = function() {
     for (let i = 0; i < this.particles.length; i++) {
       this.particles[i].update();
+
+      if (this.particles[i].dead()) {
+        this.particles.splice(i, 1);
+      }
     }
-    this.particles = this.particles.filter(p => !p.dead());
   }
 
   this.render = function() {
