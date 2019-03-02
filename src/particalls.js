@@ -218,7 +218,9 @@ function ParticleSystem(options) {
     for (let i = 0; i < this.particles.length; i++) {
       this.particles[i].update();
     }
-    this.particles = this.particles.filter(p => !p.dead());
+    if (this.particles[i].dead()) {
+        this.particles.splice(i, 1);
+      }
   }
 
   this.render = function() {
