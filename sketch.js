@@ -1,9 +1,10 @@
 var gui = new dat.GUI();
 
 gui.add(default_settings, "number_per_frame", 0, 100);
-gui.add(default_settings, "size", 0, 400).listen();
+gui.add(default_settings, "size", 0, 400);
 gui.add(default_settings, "speed", 0, 100);
 gui.add(default_settings, "lifespan", 0, 300);
+gui.add(default_settings, "gravity", 0, 5).step(0.1);
 
 var background_color = gui.addFolder("BG_Color");
 background_color.add(default_settings.background_color, "r", 0, 255);
@@ -40,7 +41,6 @@ gui.add(default_settings, "image_url");
 default_settings.modifiers.size = false;
 
 var rendino = new Renderer(default_settings);
-rendino.initCanvas();
 
 default_settings.renderer = rendino;
 default_settings.renderCallback = render_callback;
