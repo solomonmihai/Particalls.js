@@ -217,10 +217,10 @@ function ParticleSystem(options) {
   this.update = function() {
     for (let i = 0; i < this.particles.length; i++) {
       this.particles[i].update();
-    }
-    if (this.particles[i].dead()) {
+      if (this.particles[i].dead()) {
         this.particles.splice(i, 1);
       }
+    }
   }
 
   this.render = function() {
