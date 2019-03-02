@@ -36,12 +36,10 @@ class Vector {
     this.x += u.x;
     this.y += u.y;
   }
-
   mult(u) {
     this.x *= u.x;
     this.y *= u.y;
   }
-
   div(u) {
     this.x /= u.x;
     this.y /= u.y;
@@ -184,14 +182,7 @@ class Particle {
     this.lifespan -= 1;
   }
   dead() {
-    if (this.lifespan <= 0) {
-      return true;
-    } else if (
-      this.pos.x > window.innerWidth ||
-      this.pos.y > window.innerWidth ||
-      this.pos.x <= 0 ||
-      this.pos.y <= 0
-    ) {
+    if (this.lifespan < 0) {
       return true;
     } else {
       return false;
@@ -261,7 +252,6 @@ class ParticleSystem {
         this.particles[i].pos.x - this.options.size / 2,
         this.particles[i].pos.y - this.options.size / 2
       );
-      
     }
   }
 }
